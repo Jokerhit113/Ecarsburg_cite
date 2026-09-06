@@ -1,0 +1,7 @@
+Flask
+Flask-Login
+SQLAlchemy
+alembic
+qrcode
+Pillow
+Werkzeug

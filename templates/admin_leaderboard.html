@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Таблица лидеров - E-CarsBurg</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container wide">
+        <h1>🏆 Таблица лидеров</h1>
+        <p>Всего зарегистрировано компаний: <strong>{{ total_companies }}</strong></p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Место</th>
+                        <th>Компания</th>
+                        <th>Ссылка</th>
+                        <th>Email</th>
+                        <th>Переходов</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for company in leaderboard %}
+                    <tr class="{% if loop.index <= 3 %}top-3{% endif %}">
+                        <td>
+                            {% if loop.index == 1 %}🥇
+                            {% elif loop.index == 2 %}🥈
+                            {% elif loop.index == 3 %}🥉
+                            {% else %}{{ loop.index }}
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ company.name }}</strong></td>
+                        <td><code>/company/{{ company.slug }}</code></td>
+                        <td>{{ company.email }}</td>
+                        <td><strong>{{ company.total_clicks }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not leaderboard %}
+                <p class="no-data">Пока нет зарегистрированных компаний</p>
+            {% endif %}
+        </section>
+
+        <div class="actions">
+            <a href="{{ url_for('dashboard') }}" class="btn">← Назад в кабинет</a>
+            <a href="{{ url_for('index') }}" class="btn">На главную</a>
+        </div>
+    </div>
+</body>
+</html>

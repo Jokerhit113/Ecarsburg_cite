@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет - E-CarsBurg</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<!-- Верхняя навигация -->
+    <nav class="top-nav">
+        <a href="{{ url_for('index') }}" class="nav-brand">E-CarsBurg</a>
+        <div class="nav-links">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}" class="nav-link">Личный кабинет</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Выйти</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-link">Вход</a>
+                <a href="{{ url_for('register') }}" class="nav-link nav-link-primary">Регистрация</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Личный кабинет</h1>
+        <p>Привет, <strong>{{ user.name }}</strong>!</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="referral-section">
+            <h2>Ваша реферальная ссылка</h2>
+            <p>Поделитесь этой ссылкой с клиентами и партнерами, чтобы отслеживать статистику переходов:</p>
+
+            <div class="link-box">
+                <input type="text" value="{{ referral_link }}" id="referralLink" readonly>
+                <button onclick="copyLink()" class="btn btn-copy">Копировать</button>
+            </div>
+
+            <div class="stats">
+                <p><strong>Всего уникальных переходов:</strong> {{ total_clicks }}</p>
+            </div>
+        </section>
+
+        <section class="qr-section">
+            <h2>QR-код для вашей ссылки</h2>
+            <p>Используйте этот QR-код в печатных материалах, визитках или на сайте:</p>
+            <div class="qr-container">
+                <img src="{{ qr_code }}" alt="QR-код" class="qr-image">
+            </div>
+            <a href="{{ qr_code }}" download="qr-{{ user.slug }}.png" class="btn btn-primary">Скачать QR-код</a>
+        </section>
+
+        <section class="info-section">
+            <h2>Как это работает?</h2>
+            <ol>
+                <li>Поделитесь вашей реферальной ссылкой или QR-кодом</li>
+                <li>Когда кто-то перейдет по ссылке, система засчитает уникальный переход</li>
+                <li>Вы сможете отслеживать статистику в этом личном кабинете</li>
+                <li>Топ компании попадают в таблицу лидеров!</li>
+            </ol>
+        </section>
+
+        <div class="actions">
+            <a href="{{ url_for('logout') }}" class="btn">Выйти</a>
+            <a href="{{ url_for('index') }}" class="btn">← На главную</a>
+            {% if user.is_admin %}
+                <a href="{{ url_for('admin_leaderboard') }}" class="btn btn-primary">Таблица лидеров</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function copyLink() {
+            const linkInput = document.getElementById('referralLink');
+            linkInput.select();
+            document.execCommand('copy');
+            alert('Ссылка скопирована!');
+        }
+    </script>
+</body>
+</html>
