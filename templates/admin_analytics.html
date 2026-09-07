@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Аналитика - E-CarsBurg</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container wide">
+        <h1>📊 Аналитика действий пользователей</h1>
+
+        <section>
+            <h2>Статистика по типам действий</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Тип действия</th>
+                        <th>Детали</th>
+                        <th>Количество</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in action_stats %}
+                    <tr>
+                        <td>{{ stat.action_type }}</td>
+                        <td>{{ stat.action_detail or '-' }}</td>
+                        <td><strong>{{ stat.count }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Последние 50 действий</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>IP</th>
+                        <th>Действие</th>
+                        <th>Детали</th>
+                        <th>Реферал</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for action in recent_actions %}
+                    <tr>
+                        <td>{{ action.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                        <td><code>{{ action.ip_address }}</code></td>
+                        <td>{{ action.action_type }}</td>
+                        <td>{{ action.action_detail or '-' }}</td>
+                        <td>{{ action.referral_slug or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <div class="actions">
+            <a href="{{ url_for('admin_leaderboard') }}" class="btn">Таблица лидеров</a>
+            <a href="{{ url_for('dashboard') }}" class="btn">← Назад в кабинет</a>
+        </div>
+    </div>
+</body>
+</html>

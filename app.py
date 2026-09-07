@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from database import engine, Base, SessionLocal
-from models import Company
+from models import Company, UserAction
 from werkzeug.security import generate_password_hash, check_password_hash
 import qrcode
 import io
@@ -160,10 +160,22 @@ def track_referral(slug):
                 user_agent=request.headers.get('User-Agent', '')[:255]
             )
             db.add(new_click)
+
+            # Также сохраняем в общую таблицу действий
+            user_action = UserAction(
+                ip_address=user_ip,
+                user_agent=request.headers.get('User-Agent', '')[:500],
+                action_type='referral_click',
+                action_detail=company.slug,
+                referral_slug=company.slug,
+                page_url=request.url
+            )
+            db.add(user_action)
+
             db.commit()
 
-        # Редирект на главную страницу
-        return redirect(url_for('index'))
+        # Редирект на главную с параметром ref (чтобы JavaScript знал, откуда пришел)
+        return redirect(url_for('index', ref=slug))
     finally:
         db.close()
 
@@ -245,6 +257,65 @@ def admin_leaderboard():
             'admin_leaderboard.html',
             leaderboard=leaderboard_data,
             total_companies=total_companies
+        )
+    finally:
+        db.close()
+
+
+from flask import jsonify
+
+
+@app.route('/track-action', methods=['POST'])
+def track_action():
+    """Принимает события от JavaScript и сохраняет в БД"""
+    try:
+        data = request.get_json()
+
+        db = SessionLocal()
+        try:
+            action = UserAction(
+                ip_address=request.remote_addr,
+                user_agent=request.headers.get('User-Agent', '')[:500],
+                action_type=data.get('action_type', 'unknown'),
+                action_detail=data.get('action_detail', ''),
+                referral_slug=data.get('referral_slug', ''),
+                page_url=data.get('page_url', '')
+            )
+            db.add(action)
+            db.commit()
+
+            return jsonify({'status': 'success'})
+        finally:
+            db.close()
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/admin/analytics')
+@admin_required
+def admin_analytics():
+    """Подробная аналитика действий пользователей"""
+    db = SessionLocal()
+    try:
+        # Статистика по типам действий
+        action_stats = db.query(
+            UserAction.action_type,
+            UserAction.action_detail,
+            func.count(UserAction.id).label('count')
+        ).group_by(UserAction.action_type, UserAction.action_detail) \
+            .order_by(func.count(UserAction.id).desc()) \
+            .all()
+
+        # Последние 50 действий
+        recent_actions = db.query(UserAction) \
+            .order_by(UserAction.created_at.desc()) \
+            .limit(50) \
+            .all()
+
+        return render_template(
+            'admin_analytics.html',
+            action_stats=action_stats,
+            recent_actions=recent_actions
         )
     finally:
         db.close()
