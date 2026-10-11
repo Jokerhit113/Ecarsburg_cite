@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Админ-панель{% endblock %} - E-CarsBurg</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body class="admin-theme">
+    <nav class="top-nav">
+        <a href="{{ url_for('index') }}" class="nav-brand">E-CarsBurg</a>
+        <div class="nav-links">
+            {% if current_user.is_main_admin %}
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-link">Админ-панель</a>
+            {% elif current_user.is_supervisor %}
+                <a href="{{ url_for('admin_companies') }}" class="nav-link">Панель супервайзера</a>
+            {% endif %}
+            <span class="nav-link" style="opacity:0.7;">{{ current_user.role_label }}</span>
+            <a href="{{ url_for('logout') }}" class="nav-link">Выйти</a>
+        </div>
+    </nav>
+
+    <div class="container {% block container_class %}wide{% endblock %}">
+        <nav class="admin-nav" aria-label="Разделы админки">
+            {% if current_user.is_main_admin %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn {% if active_nav == 'dashboard' %}active{% endif %}">⚙️ Обзор</a>
+                <a href="{{ url_for('admin_companies') }}" class="btn {% if active_nav == 'companies' %}active{% endif %}">🏢 Компании</a>
+                <a href="{{ url_for('admin_supervisors') }}" class="btn {% if active_nav == 'supervisors' %}active{% endif %}">👥 Супервайзеры</a>
+                <a href="{{ url_for('admin_bonuses') }}" class="btn {% if active_nav == 'bonuses' %}active{% endif %}">🎁 Бонусы</a>
+                <a href="{{ url_for('admin_media') }}" class="btn {% if active_nav == 'media' %}active{% endif %}">🎬 Видео</a>
+                <a href="{{ url_for('admin_texts') }}" class="btn {% if active_nav == 'texts' %}active{% endif %}">✏️ Тексты</a>
+                <a href="{{ url_for('admin_leaderboard') }}" class="btn {% if active_nav == 'leaderboard' %}active{% endif %}">🏆 Лидеры</a>
+                <a href="{{ url_for('admin_analytics') }}" class="btn {% if active_nav == 'analytics' %}active{% endif %}">📊 Аналитика</a>
+            {% elif current_user.is_supervisor %}
+                <a href="{{ url_for('admin_companies') }}" class="btn {% if active_nav == 'companies' %}active{% endif %}">🏢 Мои компании</a>
+                <a href="{{ url_for('admin_add_company') }}" class="btn {% if active_nav == 'add_company' %}active{% endif %}">➕ Создать компанию</a>
+            {% endif %}
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+        {% block footer_actions %}
+        <div class="actions" style="margin-top: 30px;">
+            <a href="{{ url_for('index') }}" class="btn" target="_blank">👁 На сайт</a>
+            <a href="{{ url_for('logout') }}" class="btn">Выйти</a>
+        </div>
+        {% endblock %}
+    </div>
+</body>
+</html>

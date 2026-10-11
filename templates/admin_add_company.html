@@ -1,0 +1,27 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "companies" %}
+{% block title %}Добавить компанию{% endblock %}
+{% block container_class %}{% endblock %}
+{% block content %}
+        <h1>Добавить новую компанию</h1>
+        <p>Партнёр получит логин (slug) и сгенерированный пароль.</p>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">Название компании *</label>
+                <input type="text" id="name" name="name" required maxlength="100" placeholder="Авто Премиум">
+            </div>
+            <div class="form-group">
+                <label for="slug">Логин / slug *</label>
+                <input type="text" id="slug" name="slug" required maxlength="50" placeholder="avto-premium"
+                       pattern="[a-zA-Z0-9_-]+" title="Только латинские буквы, цифры, _ и -">
+                <small>Используется для входа и реферальной ссылки /company/slug</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Создать компанию</button>
+        </form>
+{% endblock %}
+{% block footer_actions %}
+        <div class="actions" style="margin-top: 24px; justify-content: center;">
+            <a href="{{ url_for('admin_companies') }}" class="btn">← К списку компаний</a>
+        </div>
+{% endblock %}

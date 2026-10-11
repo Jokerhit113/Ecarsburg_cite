@@ -1,0 +1,53 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "companies" %}
+{% block title %}Управление компаниями{% endblock %}
+{% block content %}
+        <h1>🏢 {% if current_user.is_supervisor %}Мои компании{% else %}Управление компаниями{% endif %}</h1>
+        <p>{% if current_user.is_supervisor %}Компании-партнёры, которые вы создали. Здесь можно выдать или сменить пароль.{% else %}Партнёры с реферальными ссылками и доступом в личный кабинет.{% endif %}</p>
+
+        <div class="section-header">
+            <h2>Партнёры</h2>
+            <a href="{{ url_for('admin_add_company') }}" class="btn btn-primary">+ Добавить компанию</a>
+        </div>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Логин (slug)</th>
+                    <th>Переходов</th>
+                    <th>Дата создания</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if companies_data %}
+                    {% for item in companies_data %}
+                    <tr>
+                        <td><strong>{{ item.company.name }}</strong></td>
+                        <td><code>{{ item.company.slug }}</code></td>
+                        <td><strong>{{ item.clicks }}</strong></td>
+                        <td>{{ item.company.created_at.strftime('%d.%m.%Y') if item.company.created_at else '-' }}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <a href="{{ url_for('admin_change_password', company_id=item.company.id) }}" class="btn btn-primary btn-small" style="text-decoration: none;">🔑 Пароль</a>
+                                {% if current_user.is_main_admin %}
+                                <form method="POST" action="{{ url_for('admin_delete_company', company_id=item.company.id) }}" style="display: inline;" onsubmit="return confirm('Удалить компанию {{ item.company.name }}?')">
+                                    <button type="submit" class="btn btn-danger btn-small">Удалить</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="no-data">
+                            Пока нет компаний.<br>
+                            Нажмите «Добавить компанию», чтобы создать первую.
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+{% endblock %}

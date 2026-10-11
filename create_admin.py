@@ -1,29 +1,32 @@
 from database import SessionLocal
-from models import Company
+from models import Company, ROLE_ADMIN
 from werkzeug.security import generate_password_hash
 
 
 def create_admin():
     db = SessionLocal()
     try:
-        # Проверяем, есть ли уже админ
-        existing_admin = db.query(Company).filter(Company.is_admin == True).first()
+        existing_admin = db.query(Company).filter(Company.role == ROLE_ADMIN).first()
         if existing_admin:
-            print(f"Администратор уже существует: {existing_admin.email}")
+            # ensure role/is_admin sync
+            existing_admin.role = ROLE_ADMIN
+            existing_admin.is_admin = True
+            db.commit()
+            print(f"Администратор уже существует: логин «{existing_admin.slug}» ({existing_admin.email})")
             return
 
-        # Создаем администратора
         admin = Company(
             name="E-CarsBurg Admin",
             slug="admin",
             email="admin@ecarsburg.ru",
-            password_hash=generate_password_hash("admin123"),  # Замени на безопасный пароль!
-            is_admin=True
+            password_hash=generate_password_hash("admin123"),
+            is_admin=True,
+            role=ROLE_ADMIN,
         )
         db.add(admin)
         db.commit()
-        print("Администратор создан успешно!")
-        print("Email: admin@ecarsburg.ru")
+        print("Главный администратор создан!")
+        print("Логин: admin")
         print("Пароль: admin123")
     except Exception as e:
         db.rollback()

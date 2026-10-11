@@ -2,25 +2,21 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход - E-CarsBurg</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<!-- Верхняя навигация -->
     <nav class="top-nav">
         <a href="{{ url_for('index') }}" class="nav-brand">E-CarsBurg</a>
         <div class="nav-links">
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard') }}" class="nav-link">Личный кабинет</a>
-                <a href="{{ url_for('logout') }}" class="nav-link">Выйти</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="nav-link">Вход</a>
-                <a href="{{ url_for('register') }}" class="nav-link nav-link-primary">Регистрация</a>
-            {% endif %}
+            <a href="{{ url_for('index') }}" class="nav-link">На главную</a>
         </div>
     </nav>
+
     <div class="container">
         <h1>Вход в личный кабинет</h1>
+        <p>Введите данные вашей компании для доступа к статистике</p>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -32,15 +28,17 @@
 
         <form method="POST">
             <div class="form-group">
-                <label>Email:</label>
-                <input type="email" name="email" required>
+                <label>Название компании (логин):</label>
+                <input type="text" name="slug" required placeholder="Например: my-company" autocomplete="username">
             </div>
             <div class="form-group">
                 <label>Пароль:</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" required placeholder="Введите ваш пароль" autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="submit" class="btn btn-primary">Войти в систему</button>
         </form>
+
+        <p class="help-text">Если у вас нет учетной записи, обратитесь к администратору E-CarsBurg для получения доступа.</p>
     </div>
 </body>
 </html>

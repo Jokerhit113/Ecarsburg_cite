@@ -1,0 +1,56 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "bonuses" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block container_class %}{% endblock %}
+{% block content %}
+        <h1>{{ page_title }}</h1>
+        <p>Бонус будет показан на главной в блоке «Специальное предложение».</p>
+
+        <form method="POST" action="{{ form_action }}">
+            <div class="form-group">
+                <label for="icon">Иконка (emoji)</label>
+                <input type="text" id="icon" name="icon" maxlength="20"
+                       value="{{ bonus.icon if bonus else '🎁' }}"
+                       placeholder="🛡️">
+                <small>Например: 🛡️ ✨ ❄️ 🚗 🔧</small>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Название *</label>
+                <input type="text" id="title" name="title" required maxlength="100"
+                       value="{{ bonus.title if bonus else '' }}"
+                       placeholder="1 год гарантии">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание</label>
+                <input type="text" id="description" name="description" maxlength="500"
+                       value="{{ bonus.description if bonus and bonus.description else '' }}"
+                       placeholder="Краткое описание подарка">
+            </div>
+
+            <div class="form-group">
+                <label for="sort_order">Порядок отображения</label>
+                <input type="number" id="sort_order" name="sort_order"
+                       value="{{ bonus.sort_order if bonus else 0 }}"
+                       min="0" step="1">
+                <small>Чем меньше число — тем выше в списке</small>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="is_active" name="is_active"
+                       {% if not bonus or bonus.is_active %}checked{% endif %}
+                       style="width: auto; margin: 0;">
+                <label for="is_active" style="margin: 0;">Показывать на главной</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                {% if bonus %}Сохранить{% else %}Добавить{% endif %}
+            </button>
+        </form>
+{% endblock %}
+{% block footer_actions %}
+        <div class="actions" style="margin-top: 24px; justify-content: center;">
+            <a href="{{ url_for('admin_bonuses') }}" class="btn">← К списку бонусов</a>
+        </div>
+{% endblock %}

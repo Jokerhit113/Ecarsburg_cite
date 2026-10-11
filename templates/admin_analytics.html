@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Аналитика - E-CarsBurg</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="container wide">
+{% extends "admin_base.html" %}
+{% set active_nav = "analytics" %}
+{% block title %}Аналитика{% endblock %}
+{% block content %}
         <h1>📊 Аналитика действий пользователей</h1>
+        <p>Сводка по событиям на сайте и последние действия.</p>
 
-        <section>
+        <section class="admin-section" style="margin-bottom: 28px;">
             <h2>Статистика по типам действий</h2>
             <table class="leaderboard-table">
                 <thead>
@@ -26,12 +22,14 @@
                         <td>{{ stat.action_detail or '-' }}</td>
                         <td><strong>{{ stat.count }}</strong></td>
                     </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="no-data">Данных пока нет</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
 
-        <section>
+        <section class="admin-section">
             <h2>Последние 50 действий</h2>
             <table class="leaderboard-table">
                 <thead>
@@ -52,15 +50,10 @@
                         <td>{{ action.action_detail or '-' }}</td>
                         <td>{{ action.referral_slug or '-' }}</td>
                     </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="no-data">Действий пока нет</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
-
-        <div class="actions">
-            <a href="{{ url_for('admin_leaderboard') }}" class="btn">Таблица лидеров</a>
-            <a href="{{ url_for('dashboard') }}" class="btn">← Назад в кабинет</a>
-        </div>
-    </div>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "admin_base.html" %}
+{% block title %}Супервайзеры{% endblock %}
+{% block content %}
+<h1>Супервайзеры</h1>
+<p style="color: var(--mc-text-muted, #94a3b8); margin-bottom: 20px;">
+    Управление аккаунтами 2-го уровня и статистика их работы
+</p>
+
+<div class="actions" style="margin-bottom: 24px;">
+    <a href="{{ url_for('admin_add_supervisor') }}" class="btn btn-primary">➕ Создать супервайзера</a>
+</div>
+
+{% if stats %}
+<div class="admin-section">
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Логин</th>
+                <th>Создано компаний</th>
+                <th>Клики по их компаниям</th>
+                <th>Дата создания</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in stats %}
+            <tr>
+                <td>{{ row.supervisor.name }}</td>
+                <td><code>{{ row.supervisor.slug }}</code></td>
+                <td><strong>{{ row.companies_count }}</strong></td>
+                <td>{{ row.total_clicks }}</td>
+                <td>{{ row.supervisor.created_at.strftime('%d.%m.%Y') if row.supervisor.created_at else '—' }}</td>
+                <td>
+                    <a href="{{ url_for('admin_supervisor_password', sup_id=row.supervisor.id) }}" class="btn">🔑 Пароль</a>
+                    <form method="POST" action="{{ url_for('admin_delete_supervisor', sup_id=row.supervisor.id) }}" style="display:inline;" onsubmit="return confirm('Удалить супервайзера?');">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            {% if row.companies %}
+            <tr>
+                <td colspan="6" style="font-size: 0.9em; color: #94a3b8;">
+                    Компании:
+                    {% for c in row.companies %}
+                        <code>{{ c.slug }}</code>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="no-data">Супервайзеры ещё не созданы.</p>
+{% endif %}
+{% endblock %}

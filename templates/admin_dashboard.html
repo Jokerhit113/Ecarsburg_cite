@@ -1,0 +1,153 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "dashboard" %}
+{% block title %}Обзор{% endblock %}
+{% block content %}
+        <h1>⚙️ Панель администратора</h1>
+        <p>Обзор статистики и быстрый доступ к управлению сайтом.</p>
+
+        <div class="stats-grid">
+            <div class="stat-card stat-card-blue">
+                <div class="stat-icon">🏢</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_companies }}</div>
+                    <div class="stat-label">Компаний-партнёров</div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-green">
+                <div class="stat-icon">🔗</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_clicks }}</div>
+                    <div class="stat-label">Всего переходов</div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-orange">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ clicks_today }}</div>
+                    <div class="stat-label">Переходов сегодня</div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-purple">
+                <div class="stat-icon">📈</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ clicks_week }}</div>
+                    <div class="stat-label">Переходов за 7 дней</div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-teal">
+                <div class="stat-icon">👁️</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_page_views }}</div>
+                    <div class="stat-label">Просмотров страниц</div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-pink">
+                <div class="stat-icon">📱</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_social_clicks }}</div>
+                    <div class="stat-label">Кликов по соцсетям</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-quick-actions">
+            <h2>Быстрые действия</h2>
+            <div class="quick-actions-grid">
+                <a href="{{ url_for('admin_companies') }}" class="quick-action-card">
+                    <span class="quick-action-icon">🏢</span>
+                    <span class="quick-action-title">Управление компаниями</span>
+                    <span class="quick-action-desc">Добавить, удалить, сменить пароль</span>
+                </a>
+                <a href="{{ url_for('admin_leaderboard') }}" class="quick-action-card">
+                    <span class="quick-action-icon">🏆</span>
+                    <span class="quick-action-title">Таблица лидеров</span>
+                    <span class="quick-action-desc">Рейтинг партнёров по переходам</span>
+                </a>
+                <a href="{{ url_for('admin_analytics') }}" class="quick-action-card">
+                    <span class="quick-action-icon">📊</span>
+                    <span class="quick-action-title">Аналитика</span>
+                    <span class="quick-action-desc">Подробные действия пользователей</span>
+                </a>
+                <a href="{{ url_for('admin_bonuses') }}" class="quick-action-card">
+                    <span class="quick-action-icon">🎁</span>
+                    <span class="quick-action-title">Бонусы за промокод</span>
+                    <span class="quick-action-desc">Добавить, изменить, удалить подарки</span>
+                </a>
+                <a href="{{ url_for('admin_media') }}" class="quick-action-card">
+                    <span class="quick-action-icon">🎬</span>
+                    <span class="quick-action-title">Видео на главной</span>
+                    <span class="quick-action-desc">Загрузить или заменить приветственное видео</span>
+                </a>
+                <a href="{{ url_for('admin_texts') }}" class="quick-action-card">
+                    <span class="quick-action-icon">✏️</span>
+                    <span class="quick-action-title">Тексты главной</span>
+                    <span class="quick-action-desc">Заголовки и описания блоков сайта</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="admin-two-cols">
+            <section class="admin-section">
+                <h2>🏆 Топ-5 компаний по переходам</h2>
+                {% if top_companies %}
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Компания</th>
+                            <th>Slug</th>
+                            <th>Переходов</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in top_companies %}
+                        <tr class="{% if loop.index <= 3 %}top-3{% endif %}">
+                            <td>
+                                {% if loop.index == 1 %}🥇
+                                {% elif loop.index == 2 %}🥈
+                                {% elif loop.index == 3 %}🥉
+                                {% else %}{{ loop.index }}
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ company.name }}</strong></td>
+                            <td><code>{{ company.slug }}</code></td>
+                            <td><strong>{{ company.total_clicks }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">Пока нет данных по компаниям</p>
+                {% endif %}
+                <div style="margin-top: 16px;">
+                    <a href="{{ url_for('admin_leaderboard') }}" class="btn btn-small">Вся таблица лидеров →</a>
+                </div>
+            </section>
+
+            <section class="admin-section">
+                <h2>🕒 Последние переходы</h2>
+                {% if recent_clicks %}
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Компания</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for click, company in recent_clicks %}
+                        <tr>
+                            <td>{{ click.clicked_at.strftime('%d.%m %H:%M') }}</td>
+                            <td><strong>{{ company.name }}</strong></td>
+                            <td><code>{{ click.ip_address or '—' }}</code></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="no-data">Переходов пока нет</p>
+                {% endif %}
+            </section>
+        </div>
+{% endblock %}

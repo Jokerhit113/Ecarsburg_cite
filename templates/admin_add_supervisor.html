@@ -1,0 +1,26 @@
+{% extends "admin_base.html" %}
+{% block title %}Новый супервайзер{% endblock %}
+{% block content %}
+<h1>Создать супервайзера</h1>
+<p style="color: var(--mc-text-muted, #94a3b8); margin-bottom: 20px;">
+    Супервайзер сможет создавать компании-партнёры и выдавать им пароли. Полный доступ к сайту у него нет.
+</p>
+
+<form method="POST" class="media-upload-form">
+    <div class="form-group">
+        <label>Имя / ФИО</label>
+        <input type="text" name="name" required placeholder="Например: Иван Петров">
+    </div>
+    <div class="form-group">
+        <label>Логин (латиница)</label>
+        <input type="text" name="slug" required placeholder="например: ivan-sv" pattern="[a-z0-9\\-]+" title="Только латиница, цифры и дефис">
+        <small class="help-text">По этому логину супервайзер будет входить в систему</small>
+    </div>
+    <div class="form-group">
+        <label>Пароль (необязательно)</label>
+        <input type="text" name="password" placeholder="Оставьте пустым — сгенерируется автоматически">
+    </div>
+    <button type="submit" class="btn btn-primary">Создать супервайзера</button>
+    <a href="{{ url_for('admin_supervisors') }}" class="btn">Отмена</a>
+</form>
+{% endblock %}

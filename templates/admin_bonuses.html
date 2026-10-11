@@ -1,0 +1,68 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "bonuses" %}
+{% block title %}Бонусы за промокод{% endblock %}
+{% block content %}
+        <h1>🎁 Бонусы за промокод</h1>
+        <p>Управляйте подарками, которые отображаются на главной странице в блоке промокода.</p>
+
+        <div class="section-header">
+            <h2>Список бонусов</h2>
+            <a href="{{ url_for('admin_add_bonus') }}" class="btn btn-primary">+ Добавить бонус</a>
+        </div>
+
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Порядок</th>
+                    <th>Иконка</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if bonuses %}
+                    {% for bonus in bonuses %}
+                    <tr class="{% if not bonus.is_active %}row-inactive{% endif %}">
+                        <td><strong>{{ bonus.sort_order }}</strong></td>
+                        <td style="font-size: 1.5em;">{{ bonus.icon }}</td>
+                        <td><strong>{{ bonus.title }}</strong></td>
+                        <td>{{ bonus.description or '—' }}</td>
+                        <td>
+                            {% if bonus.is_active %}
+                                <span class="badge badge-success">Активен</span>
+                            {% else %}
+                                <span class="badge badge-muted">Скрыт</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <a href="{{ url_for('admin_edit_bonus', bonus_id=bonus.id) }}" class="btn btn-primary btn-small" style="text-decoration: none;">Изменить</a>
+                                <form method="POST" action="{{ url_for('admin_toggle_bonus', bonus_id=bonus.id) }}" style="display: inline;">
+                                    <button type="submit" class="btn btn-small">
+                                        {% if bonus.is_active %}Скрыть{% else %}Показать{% endif %}
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin_delete_bonus', bonus_id=bonus.id) }}" style="display: inline;" onsubmit="return confirm('Удалить бонус «{{ bonus.title }}»?')">
+                                    <button type="submit" class="btn btn-danger btn-small">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="no-data">Бонусов пока нет. Нажмите «Добавить бонус».</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+{% endblock %}
+{% block footer_actions %}
+        <div class="actions" style="margin-top: 30px;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn">⚙️ Админ-панель</a>
+            <a href="{{ url_for('index') }}" class="btn" target="_blank">👁 Смотреть на сайте</a>
+            <a href="{{ url_for('dashboard') }}" class="btn">← Личный кабинет</a>
+        </div>
+{% endblock %}

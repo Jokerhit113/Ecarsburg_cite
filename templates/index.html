@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-CarsBurg - Продажа и доставка автомобилей</title>
+    <title>{{ texts.page_title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
     <!-- Верхняя навигация -->
     <nav class="top-nav">
         <a href="{{ url_for('index') }}" class="nav-brand">E-CarsBurg</a>
@@ -14,25 +15,78 @@
             {% if current_user.is_authenticated %}
                 <a href="{{ url_for('dashboard') }}" class="nav-link">Личный кабинет</a>
                 <a href="{{ url_for('logout') }}" class="nav-link">Выйти</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="nav-link">Вход</a>
-                <a href="{{ url_for('register') }}" class="nav-link nav-link-primary">Регистрация</a>
-            {% endif %}
+{% else %}
+    <a href="{{ url_for('login') }}" class="nav-link nav-link-primary">Вход</a>
+{% endif %}
         </div>
     </nav>
 
     <!-- Основной контент -->
     <main class="main-content">
-        <header class="hero">
-            <h1>E-CarsBurg</h1>
-            <p class="hero-subtitle">E-CarsBurg - ваш надежный партнер в мире автомобильных поставок!
-            Мы специализируемся на индивидуальных заказах автомобилей из Китая, США, Южной Кореи и Европы,
-                обеспечивая высочайший уровень сервиса и качества.</p>
-        </header>
+        <!-- Видео приветствие -->
+        <section class="video-section">
+            <h2>{{ texts.hero_title }}</h2>
+            <p class="section-subtitle">{{ texts.hero_subtitle }}</p>
 
+            <div class="video-container">
+                <video
+                    id="welcomeVideo"
+                    controls
+                    poster="{{ url_for('static', filename=welcome_poster) }}"
+                    playsinline
+                    preload="metadata"
+                >
+                    <source src="{{ url_for('static', filename=welcome_video) }}" type="video/mp4">
+                    Ваш браузер не поддерживает видео. Пожалуйста, скачайте видео для просмотра.
+                </video>
+                <button type="button" class="video-play-btn" id="videoPlayBtn" aria-label="Воспроизвести видео">
+                    <span class="video-play-glass"></span>
+                    <svg class="video-play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9.5 7.5v9l7-4.5-7-4.5z"/>
+                    </svg>
+                </button>
+
+<!--                &lt;!&ndash; Кнопка автоплея (опционально) &ndash;&gt;-->
+<!--                <button class="video-autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">-->
+<!--                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">-->
+<!--                        <path d="M8 5v14l11-7z"/>-->
+<!--                    </svg>-->
+<!--                    <span>Автовоспроизведение</span>-->
+<!--                </button>-->
+            </div>
+        </section>
+                <!-- Блок с промокодом и подарками -->
+        <section class="promo-section animate-on-scroll">
+            <h2>{{ texts.promo_title }}</h2>
+            <p class="section-subtitle">{{ texts.promo_subtitle }}</p>
+
+            <div class="promo-code-container">
+                <span class="promo-label">ВАШ ПРОМОКОД:</span>
+                <div class="promo-code-box">
+                    <span id="promoCodeDisplay">ЗАГРУЗКА...</span>
+                    <button class="btn-copy-promo" onclick="copyPromoCode()">📋 Копировать</button>
+                </div>
+                <p class="promo-hint" id="promoHint">Определяем ваш промокод...</p>
+            </div>
+
+            <div class="promo-gifts">
+                {% if bonuses %}
+                    {% for bonus in bonuses %}
+                    <div class="gift-card">
+                        <div class="gift-icon">{{ bonus.icon }}</div>
+                        <h3>{{ bonus.title }}</h3>
+                        <p>{{ bonus.description or '' }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="section-subtitle" style="opacity:0.7;">Подарки скоро появятся</p>
+                {% endif %}
+            </div>
+        </section>
+                <!-- Контактные Данные -->
         <section class="links-section">
-            <h2>Мы в социальных сетях</h2>
-            <p class="section-subtitle">Подписывайтесь на наши соц.сети и следите за новостями, обзорами и акциями</p>
+            <h2>{{ texts.social_title }}</h2>
+            <p class="section-subtitle">{{ texts.social_subtitle }}</p>
 
             <div class="link-buttons">
                 <a href="https://e-carsburg.ru/" target="_blank" class="social-btn btn-website">
@@ -64,8 +118,8 @@
         </section>
                 <!-- Карусель с фотографиями -->
         <section class="gallery-section">
-            <h2>Наши довольные покупатели</h2>
-            <p class="section-subtitle">Люди которые доверили нам подобрать и доставить автомобили</p>
+            <h2>{{ texts.gallery_title }}</h2>
+            <p class="section-subtitle">{{ texts.gallery_subtitle }}</p>
 
             <div class="carousel-container">
                 <div class="carousel-wrapper">
@@ -124,6 +178,7 @@
                     </div>
                 </div>
 
+
                 <!-- Кнопки навигации -->
                 <button class="carousel-btn prev-btn" id="prevBtn" aria-label="Предыдущее фото">
                     <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
@@ -136,146 +191,315 @@
                 <div class="carousel-dots" id="carouselDots"></div>
             </div>
         </section>
+        <!-- Процесс работы -->
+        <section class="process-section animate-on-scroll">
+            <h2>{{ texts.process_title }}</h2>
+            <p class="section-subtitle">{{ texts.process_subtitle }}</p>
+
+            <!-- Фоновая анимация -->
+            <div class="floating-icons">
+                <div class="floating-icon icon-car">🚗</div>
+                <div class="floating-icon icon-ship">🚢</div>
+                <div class="floating-icon icon-money">💰</div>
+                <div class="floating-icon icon-road">🛣️</div>
+                <div class="floating-icon icon-key">🔑</div>
+            </div>
+
+            <div class="process-timeline">
+                <!-- Шаг 1 -->
+                <div class="process-step">
+                    <div class="step-icon">📞</div>
+                    <div class="step-content">
+                        <h3>1. Обращение клиента</h3>
+                        <p>Вы связываетесь с нами любым удобным способом</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 2 -->
+                <div class="process-step">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-content">
+                        <h3>2. Выбор автомобиля</h3>
+                        <p>Подбираем оптимальный вариант под ваш бюджет</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 3 -->
+                <div class="process-step">
+                    <div class="step-icon">📋</div>
+                    <div class="step-content">
+                        <h3>3. Обсуждение условий</h3>
+                        <p>Согласовываем все детали сделки</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 4 -->
+                <div class="process-step">
+                    <div class="step-icon">💳</div>
+                    <div class="step-content">
+                        <h3>4. Оплата автомобиля</h3>
+                        <p>Вы оплачиваете стоимость авто</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 5 -->
+                <div class="process-step">
+                    <div class="step-icon">🇨</div>
+                    <div class="step-content">
+                        <h3>5. Закупка в Китае</h3>
+                        <p>Покупаем автомобиль у официального дилера</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 6 -->
+                <div class="process-step">
+                    <div class="step-icon">🚢</div>
+                    <div class="step-content">
+                        <h3>6. Транспортировка</h3>
+                        <p>Доставляем авто до таможенного терминала</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 7 -->
+                <div class="process-step">
+                    <div class="step-icon">📄</div>
+                    <div class="step-content">
+                        <h3>7. Растаможка</h3>
+                        <p>Проходим все таможенные процедуры</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 8 -->
+                <div class="process-step">
+                    <div class="step-icon">🚚</div>
+                    <div class="step-content">
+                        <h3>8. Доставка до E-CarsBurg</h3>
+                        <p>Привозим автомобиль в наш центр</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 9 -->
+                <div class="process-step">
+                    <div class="step-icon">✨</div>
+                    <div class="step-content">
+                        <h3>9. Подготовка авто</h3>
+                        <p>Мойка, полировка, проверка состояния</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 10 -->
+                <div class="process-step">
+                    <div class="step-icon">🎉</div>
+                    <div class="step-content">
+                        <h3>10. Выдача клиенту</h3>
+                        <p>Передаем вам ключи от нового автомобиля</p>
+                    </div>
+                </div>
+
+                <!-- Шаг 11 -->
+                <div class="process-step">
+                    <div class="step-icon">💼</div>
+                    <div class="step-content">
+                        <h3>11. Оплата услуг</h3>
+                        <p>Вы оплачиваете наши услуги по доставке</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 E-CarsBurg. Все права защищены.</p>
+        <p>{{ texts.footer_text }}</p>
     </footer>
-    <script>
-        // Карусель
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const track = document.getElementById('carouselTrack');
-            const slides = Array.from(track.children);
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const dotsContainer = document.getElementById('carouselDots');
-
-            let currentIndex = 0;
-            let autoplayInterval;
-
-            // Создаем точки-индикаторы
-            slides.forEach((_, index) => {
-                const dot = document.createElement('button');
-                dot.classList.add('carousel-dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-
-            const dots = Array.from(dotsContainer.children);
-
-            function updateCarousel() {
-                const slideWidth = slides[0].getBoundingClientRect().width;
-                track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-
-                // Обновляем активную точку
-                dots.forEach(dot => dot.classList.remove('active'));
-                dots[currentIndex].classList.add('active');
-            }
-
-            function goToSlide(index) {
-                currentIndex = index;
-                updateCarousel();
-                resetAutoplay();
-            }
-
-            function nextSlide() {
-                currentIndex = (currentIndex + 1) % slides.length;
-                updateCarousel();
-            }
-
-            function prevSlide() {
-                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-                updateCarousel();
-            }
-
-            // Обработчики кнопок
-            nextBtn.addEventListener('click', () => {
-                nextSlide();
-                resetAutoplay();
-            });
-
-            prevBtn.addEventListener('click', () => {
-                prevSlide();
-                resetAutoplay();
-            });
-
-            // Автоплей (смена каждые 5 секунд)
-            function startAutoplay() {
-                autoplayInterval = setInterval(nextSlide, 5000);
-            }
-
-            function resetAutoplay() {
-                clearInterval(autoplayInterval);
-                startAutoplay();
-            }
-
-            // Свайп для мобильных устройств
-            let touchStartX = 0;
-            let touchEndX = 0;
-
-            track.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            }, {passive: true});
-
-            track.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            }, {passive: true});
-
-            function handleSwipe() {
-                if (touchEndX < touchStartX - 50) {
-                    nextSlide();
-                    resetAutoplay();
-                }
-                if (touchEndX > touchStartX + 50) {
-                    prevSlide();
-                    resetAutoplay();
-                }
-            }
-
-            // Обновление при изменении размера окна
-            window.addEventListener('resize', updateCarousel);
-
-            // Запуск
-            startAutoplay();
-            updateCarousel();
-        });
-    </script>
-    <script>
-        // Отслеживание действий пользователя
-        (function() {
-            // Получаем referral_slug из URL (если есть)
+            // ==========================================
+            // 0. Глобальные переменные и Логика Промокода
+            // ==========================================
             const urlParams = new URLSearchParams(window.location.search);
-            const referralSlug = urlParams.get('ref') || '';
+            const refSlug = urlParams.get('ref'); // Используем эту переменную и в промокоде, и в аналитике
 
-            // Функция отправки события на сервер
+            const promoDisplay = document.getElementById('promoCodeDisplay');
+            const promoHint = document.getElementById('promoHint');
+
+            if (promoDisplay && promoHint) {
+                if (refSlug) {
+                    promoDisplay.textContent = refSlug.toUpperCase();
+                    promoHint.textContent = `Этот эксклюзивный промокод предоставлен вашим партнером: ${refSlug}`;
+                } else {
+                    promoDisplay.textContent = "ECARSBURG";
+                    promoHint.textContent = "Узнайте актуальный промокод у наших партнеров или менеджеров.";
+                    const copyBtn = document.querySelector('.btn-copy-promo');
+                    if (copyBtn) copyBtn.style.opacity = '0.7';
+                }
+            }
+
+            window.copyPromoCode = function() {
+                const code = document.getElementById('promoCodeDisplay').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    const btn = document.querySelector('.btn-copy-promo');
+                    if (btn) {
+                        const originalText = btn.textContent;
+                        btn.textContent = '✅ Скопировано!';
+                        btn.style.background = '#48bb78';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.style.background = '#f6d365';
+                        }, 2000);
+                    }
+                });
+            };
+
+            // ==========================================
+            // 1. Плавное появление секций при скролле
+            // ==========================================
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => section.classList.add('animate-on-scroll'));
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+            sections.forEach(section => observer.observe(section));
+
+            // 1.1 Анимация шагов процесса (каскадное появление)
+            const processSteps = document.querySelectorAll('.process-step');
+            const stepObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('in-view');
+                        }, index * 150);
+                        stepObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2, rootMargin: '0px 0px -30px 0px' });
+
+            processSteps.forEach(step => stepObserver.observe(step));
+
+            // ==========================================
+            // 2. Логика карусели
+            // ==========================================
+            const track = document.getElementById('carouselTrack');
+            if (track) {
+                const slides = Array.from(track.children);
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const dotsContainer = document.getElementById('carouselDots');
+
+                let currentIndex = 0;
+                let autoplayInterval;
+
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('carousel-dot');
+                    if (index === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        currentIndex = index;
+                        updateCarousel();
+                        resetAutoplay();
+                    });
+                    dotsContainer.appendChild(dot);
+                });
+
+                const dots = Array.from(dotsContainer.children);
+
+                function updateCarousel() {
+                    const slideWidth = slides[0].getBoundingClientRect().width;
+                    track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    dots[currentIndex].classList.add('active');
+                }
+
+                function nextSlide() {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    updateCarousel();
+                }
+
+                function prevSlide() {
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                    updateCarousel();
+                }
+
+                if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
+                if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
+
+                function startAutoplay() {
+                    autoplayInterval = setInterval(nextSlide, 4000);
+                }
+
+                function resetAutoplay() {
+                    clearInterval(autoplayInterval);
+                    startAutoplay();
+                }
+
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                track.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                track.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    if (touchEndX < touchStartX - 50) { nextSlide(); resetAutoplay(); }
+                    if (touchEndX > touchStartX + 50) { prevSlide(); resetAutoplay(); }
+                }, { passive: true });
+
+                window.addEventListener('resize', updateCarousel);
+                startAutoplay();
+                updateCarousel();
+            }
+
+            // ==========================================
+            // 3. Управление видео
+            // ==========================================
+            const video = document.getElementById('welcomeVideo');
+            const playBtn = document.getElementById('videoPlayBtn');
+
+            if (video && playBtn) {
+                const syncPlayBtn = () => {
+                    playBtn.classList.toggle('is-hidden', !video.paused);
+                };
+                playBtn.addEventListener('click', () => {
+                    video.play().catch(err => console.log('Play prevented:', err));
+                });
+                video.addEventListener('play', syncPlayBtn);
+                video.addEventListener('pause', syncPlayBtn);
+                video.addEventListener('ended', syncPlayBtn);
+                syncPlayBtn();
+            }
+
+            // ==========================================
+            // 4. Отслеживание действий (Analytics)
+            // ==========================================
             function trackEvent(actionType, actionDetail) {
                 fetch('/track-action', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action_type: actionType,
                         action_detail: actionDetail,
-                        referral_slug: referralSlug,
+                        referral_slug: refSlug || '', // Используем переменную, объявленную в начале
                         page_url: window.location.href
                     })
                 }).catch(err => console.error('Track error:', err));
             }
 
-            // Отслеживаем клики по кнопкам соцсетей
             document.querySelectorAll('.social-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    const socialName = this.classList[1].replace('btn-', ''); // telegram, vk, instagram и т.д.
+                btn.addEventListener('click', function() {
+                    const socialName = Array.from(this.classList).find(c => c.startsWith('btn-'))?.replace('btn-', '') || 'unknown';
                     trackEvent('social_button_click', socialName);
                 });
             });
 
-            // Отслеживаем просмотр страницы
             trackEvent('page_view', 'index');
-        })();
+        });
     </script>
 </body>
 </html>

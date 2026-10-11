@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Таблица лидеров - E-CarsBurg</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="container wide">
+{% extends "admin_base.html" %}
+{% set active_nav = "leaderboard" %}
+{% block title %}Таблица лидеров{% endblock %}
+{% block content %}
         <h1>🏆 Таблица лидеров</h1>
         <p>Всего зарегистрировано компаний: <strong>{{ total_companies }}</strong></p>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
         <section>
             <table class="leaderboard-table">
@@ -52,11 +39,4 @@
                 <p class="no-data">Пока нет зарегистрированных компаний</p>
             {% endif %}
         </section>
-
-        <div class="actions">
-            <a href="{{ url_for('dashboard') }}" class="btn">← Назад в кабинет</a>
-            <a href="{{ url_for('index') }}" class="btn">На главную</a>
-        </div>
-    </div>
-</body>
-</html>
+{% endblock %}

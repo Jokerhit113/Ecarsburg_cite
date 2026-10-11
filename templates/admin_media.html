@@ -1,0 +1,76 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "media" %}
+{% block title %}Видео на главной{% endblock %}
+{% block content %}
+        <h1>🎬 Видео на главной</h1>
+        <p>Загрузите или замените видео и постер в блоке приветствия на главной странице.</p>
+
+        <div class="admin-two-cols">
+            <section class="admin-section">
+                <h2>Текущее видео</h2>
+                <p style="color:#64748b; margin-bottom: 12px; font-size: 0.9em;">
+                    Файл: <code>{{ current_video }}</code>
+                </p>
+                <div class="media-preview">
+                    <video controls playsinline preload="metadata"
+                           poster="{{ url_for('static', filename=current_poster) }}"
+                           style="width:100%; max-height:280px; border-radius:12px; background:#000;">
+                        <source src="{{ url_for('static', filename=current_video) }}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                </div>
+                {% if current_video != default_video %}
+                <form method="POST" style="margin-top: 12px;">
+                    <input type="hidden" name="action" value="reset_video">
+                    <button type="submit" class="btn btn-small" onclick="return confirm('Сбросить видео на стандартное?')">Сбросить на стандартное</button>
+                </form>
+                {% endif %}
+            </section>
+
+            <section class="admin-section">
+                <h2>Текущий постер</h2>
+                <p style="color:#64748b; margin-bottom: 12px; font-size: 0.9em;">
+                    Файл: <code>{{ current_poster }}</code>
+                </p>
+                <div class="media-preview" style="text-align:center;">
+                    <img src="{{ url_for('static', filename=current_poster) }}"
+                         alt="Постер видео"
+                         style="max-width:100%; max-height:280px; border-radius:12px; object-fit:cover;">
+                </div>
+                {% if current_poster != default_poster %}
+                <form method="POST" style="margin-top: 12px;">
+                    <input type="hidden" name="action" value="reset_poster">
+                    <button type="submit" class="btn btn-small" onclick="return confirm('Сбросить постер на стандартный?')">Сбросить на стандартный</button>
+                </form>
+                {% endif %}
+            </section>
+        </div>
+
+        <section class="admin-section" style="margin-top: 28px;">
+            <h2>Загрузить новые файлы</h2>
+            <form method="POST" enctype="multipart/form-data" class="media-upload-form">
+                <input type="hidden" name="action" value="upload">
+
+                <div class="form-group">
+                    <label for="video">Видео (mp4, webm, ogg — до 200 МБ)</label>
+                    <input type="file" id="video" name="video" accept="video/mp4,video/webm,video/ogg,.mp4,.webm,.ogg">
+                    <small>Рекомендуется MP4 (H.264). Старое загруженное видео будет перезаписано.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="poster">Постер / превью (jpg, png, webp)</label>
+                    <input type="file" id="poster" name="poster" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+                    <small>Картинка, которая видна до запуска видео.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: auto;">💾 Сохранить</button>
+            </form>
+        </section>
+{% endblock %}
+{% block footer_actions %}
+        <div class="actions" style="margin-top: 30px;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn">⚙️ Админ-панель</a>
+            <a href="{{ url_for('index') }}" class="btn" target="_blank">👁 Смотреть на сайте</a>
+            <a href="{{ url_for('dashboard') }}" class="btn">← Личный кабинет</a>
+        </div>
+{% endblock %}

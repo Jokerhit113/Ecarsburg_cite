@@ -1,0 +1,99 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "texts" %}
+{% block title %}Тексты главной{% endblock %}
+{% block content %}
+        <h1>✏️ Тексты главной страницы</h1>
+        <p>Редактируйте заголовки и описания блоков на главной. Пустое поле подставит значение по умолчанию.</p>
+
+        <form method="POST" class="texts-form">
+            <input type="hidden" name="action" value="save">
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Общее</h2>
+                <div class="form-group">
+                    <label for="page_title">Заголовок вкладки браузера (title)</label>
+                    <input type="text" id="page_title" name="page_title" value="{{ texts.page_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="footer_text">Текст в подвале сайта</label>
+                    <input type="text" id="footer_text" name="footer_text" value="{{ texts.footer_text }}" maxlength="300">
+                </div>
+            </section>
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Блок приветствия (видео)</h2>
+                <div class="form-group">
+                    <label for="hero_title">Заголовок</label>
+                    <input type="text" id="hero_title" name="hero_title" value="{{ texts.hero_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="hero_subtitle">Подзаголовок / описание</label>
+                    <textarea id="hero_subtitle" name="hero_subtitle" rows="4" maxlength="1000">{{ texts.hero_subtitle }}</textarea>
+                </div>
+            </section>
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Блок промокода</h2>
+                <div class="form-group">
+                    <label for="promo_title">Заголовок</label>
+                    <input type="text" id="promo_title" name="promo_title" value="{{ texts.promo_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="promo_subtitle">Подзаголовок</label>
+                    <textarea id="promo_subtitle" name="promo_subtitle" rows="3" maxlength="500">{{ texts.promo_subtitle }}</textarea>
+                </div>
+            </section>
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Социальные сети</h2>
+                <div class="form-group">
+                    <label for="social_title">Заголовок</label>
+                    <input type="text" id="social_title" name="social_title" value="{{ texts.social_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="social_subtitle">Подзаголовок</label>
+                    <textarea id="social_subtitle" name="social_subtitle" rows="2" maxlength="500">{{ texts.social_subtitle }}</textarea>
+                </div>
+            </section>
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Галерея покупателей</h2>
+                <div class="form-group">
+                    <label for="gallery_title">Заголовок</label>
+                    <input type="text" id="gallery_title" name="gallery_title" value="{{ texts.gallery_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="gallery_subtitle">Подзаголовок</label>
+                    <textarea id="gallery_subtitle" name="gallery_subtitle" rows="2" maxlength="500">{{ texts.gallery_subtitle }}</textarea>
+                </div>
+            </section>
+
+            <section class="admin-section" style="margin-bottom: 20px;">
+                <h2>Как мы работаем</h2>
+                <div class="form-group">
+                    <label for="process_title">Заголовок</label>
+                    <input type="text" id="process_title" name="process_title" value="{{ texts.process_title }}" maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="process_subtitle">Подзаголовок</label>
+                    <textarea id="process_subtitle" name="process_subtitle" rows="2" maxlength="500">{{ texts.process_subtitle }}</textarea>
+                </div>
+            </section>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px;">
+                <button type="submit" class="btn btn-primary" style="width: auto;">💾 Сохранить тексты</button>
+            </div>
+        </form>
+
+        <form method="POST" style="margin-top: 16px;" onsubmit="return confirm('Сбросить все тексты к значениям по умолчанию?')">
+            <input type="hidden" name="action" value="reset">
+            <button type="submit" class="btn btn-small">Сбросить все к умолчанию</button>
+        </form>
+{% endblock %}
+{% block footer_actions %}
+        <div class="actions" style="margin-top: 30px;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn">⚙️ Админ-панель</a>
+            <a href="{{ url_for('index') }}" class="btn" target="_blank">👁 Смотреть на сайте</a>
+            <a href="{{ url_for('dashboard') }}" class="btn">← Личный кабинет</a>
+        </div>
+{% endblock %}
