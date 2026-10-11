@@ -1969,7 +1969,7 @@ body:not(.admin-theme) .container {
     width: 150px;
     height: 150px;
     margin-left: 4px; /* визуальный центр треугольника */
-    fill: #ffffff;
+    fill: #1339c1;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
     transition: transform 0.25s ease;
 }
@@ -1989,7 +1989,7 @@ body:not(.admin-theme) .container {
         rgba(255, 255, 255, 0.18) 45%,
         rgba(255, 255, 255, 0.28) 100%
     );
-    border-color: rgba(255, 255, 255, 0.75);
+    border-color: #1339c1;
     box-shadow:
         0 16px 40px rgba(0, 0, 0, 0.45),
         0 0 0 1px rgba(255, 255, 255, 0.12),
@@ -1998,7 +1998,7 @@ body:not(.admin-theme) .container {
 }
 
 .video-play-btn:hover .video-play-icon {
-    transform: scale(1.05);
+    transform: scale(1.2);
 }
 
 .video-play-btn:active {
