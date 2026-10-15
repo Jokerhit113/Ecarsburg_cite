@@ -45,14 +45,6 @@
                         <path d="M9.5 7.5v9l7-4.5-7-4.5z"/>
                     </svg>
                 </button>
-
-<!--                &lt;!&ndash; Кнопка автоплея (опционально) &ndash;&gt;-->
-<!--                <button class="video-autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">-->
-<!--                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">-->
-<!--                        <path d="M8 5v14l11-7z"/>-->
-<!--                    </svg>-->
-<!--                    <span>Автовоспроизведение</span>-->
-<!--                </button>-->
             </div>
         </section>
                 <!-- Блок с промокодом и подарками -->
@@ -82,6 +74,24 @@
                     <p class="section-subtitle" style="opacity:0.7;">Подарки скоро появятся</p>
                 {% endif %}
             </div>
+            <!-- Форма получения консультации -->
+            <section class="consultation-section" id="consultation">
+                <h2>Получить консультацию</h2>
+                <p class="section-subtitle">Оставьте свои контакты — мы свяжемся с вами и ответим на вопросы</p>
+                <form id="consultationForm" class="consultation-form">
+                    <label for="consultationName">Ваше имя</label>
+                    <input id="consultationName" name="name" type="text" autocomplete="name" maxlength="120" placeholder="Как к вам обращаться" required>
+                    <label for="consultationPhone">Телефон</label>
+                    <input id="consultationPhone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="+7 (___) ___-__-__" required>
+                    <input type="hidden" id="consultationPromocode" name="promocode" value="ECARSBURG">
+                    <label class="consent-label">
+                        <input type="checkbox" name="consent" value="1" required>
+                        <span>Я согласен(на) на обработку персональных данных и ознакомлен(а) с <a href="https://e-carsburg.ru/policy/" target="_blank" rel="noopener noreferrer">Политикой конфиденциальности</a>.</span>
+                    </label>
+                    <button class="consultation-submit" type="submit">Получить консультацию</button>
+                    <p id="consultationMessage" class="consultation-message" role="status" aria-live="polite"></p>
+                </form>
+            </section>
         </section>
                 <!-- Контактные Данные -->
         <section class="links-section">
@@ -114,7 +124,7 @@
                     <span>ВКонтакте</span>
                 </a>
             </div>
-            <p>*Instagram принадлежит компании Meta, признанной экстремистской организацией и запрещенной в РФ</p>
+            <p class="instagram-disclaimer">*Instagram принадлежит компании Meta, признанной экстремистской организацией и запрещенной в РФ</p>
         </section>
                 <!-- Карусель с фотографиями -->
         <section class="gallery-section">
@@ -124,57 +134,11 @@
             <div class="carousel-container">
                 <div class="carousel-wrapper">
                     <div class="carousel-track" id="carouselTrack">
-                        <!-- Фото 1 -->
+                        {% for image in gallery_images %}
                         <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo1.jpg') }}" alt="Автомобиль 1">
+                            <img src="{{ url_for('static', filename='img/' ~ image) }}" alt="Автомобиль {{ loop.index }}" loading="lazy">
                         </div>
-                        <!-- Фото 2 -->
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo2.jpg') }}" alt="Автомобиль 2">
-                        </div>
-                        <!-- Фото 3 -->
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo3.jpg') }}" alt="Автомобиль 3">
-                        </div>
-                        <!-- Фото 4 -->
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo4.jpg') }}" alt="Автомобиль 4">
-                        </div>
-                        <!-- Фото 5 -->
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo5.jpg') }}" alt="Автомобиль 5">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo6.jpg') }}" alt="Автомобиль 6">
-                        </div>
-                        <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo7.jpg') }}" alt="Автомобиль 7">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo8.jpg') }}" alt="Автомобиль 8">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo9.jpg') }}" alt="Автомобиль 9">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo10.jpg') }}" alt="Автомобиль 10">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo11.jpg') }}" alt="Автомобиль 11">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo12.jpg') }}" alt="Автомобиль 12">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo13.jpg') }}" alt="Автомобиль 13">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo14.jpg') }}" alt="Автомобиль 14">
-                        </div>
-                                                <div class="carousel-slide">
-                            <img src="{{ url_for('static', filename='img/photo15.jpg') }}" alt="Автомобиль 15">
-                        </div>
-                        <!-- Добавь столько слайдов, сколько нужно -->
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -191,121 +155,6 @@
                 <div class="carousel-dots" id="carouselDots"></div>
             </div>
         </section>
-        <!-- Процесс работы -->
-        <section class="process-section animate-on-scroll">
-            <h2>{{ texts.process_title }}</h2>
-            <p class="section-subtitle">{{ texts.process_subtitle }}</p>
-
-            <!-- Фоновая анимация -->
-            <div class="floating-icons">
-                <div class="floating-icon icon-car">🚗</div>
-                <div class="floating-icon icon-ship">🚢</div>
-                <div class="floating-icon icon-money">💰</div>
-                <div class="floating-icon icon-road">🛣️</div>
-                <div class="floating-icon icon-key">🔑</div>
-            </div>
-
-            <div class="process-timeline">
-                <!-- Шаг 1 -->
-                <div class="process-step">
-                    <div class="step-icon">📞</div>
-                    <div class="step-content">
-                        <h3>1. Обращение клиента</h3>
-                        <p>Вы связываетесь с нами любым удобным способом</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 2 -->
-                <div class="process-step">
-                    <div class="step-icon">🔍</div>
-                    <div class="step-content">
-                        <h3>2. Выбор автомобиля</h3>
-                        <p>Подбираем оптимальный вариант под ваш бюджет</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 3 -->
-                <div class="process-step">
-                    <div class="step-icon">📋</div>
-                    <div class="step-content">
-                        <h3>3. Обсуждение условий</h3>
-                        <p>Согласовываем все детали сделки</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 4 -->
-                <div class="process-step">
-                    <div class="step-icon">💳</div>
-                    <div class="step-content">
-                        <h3>4. Оплата автомобиля</h3>
-                        <p>Вы оплачиваете стоимость авто</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 5 -->
-                <div class="process-step">
-                    <div class="step-icon">🇨</div>
-                    <div class="step-content">
-                        <h3>5. Закупка в Китае</h3>
-                        <p>Покупаем автомобиль у официального дилера</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 6 -->
-                <div class="process-step">
-                    <div class="step-icon">🚢</div>
-                    <div class="step-content">
-                        <h3>6. Транспортировка</h3>
-                        <p>Доставляем авто до таможенного терминала</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 7 -->
-                <div class="process-step">
-                    <div class="step-icon">📄</div>
-                    <div class="step-content">
-                        <h3>7. Растаможка</h3>
-                        <p>Проходим все таможенные процедуры</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 8 -->
-                <div class="process-step">
-                    <div class="step-icon">🚚</div>
-                    <div class="step-content">
-                        <h3>8. Доставка до E-CarsBurg</h3>
-                        <p>Привозим автомобиль в наш центр</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 9 -->
-                <div class="process-step">
-                    <div class="step-icon">✨</div>
-                    <div class="step-content">
-                        <h3>9. Подготовка авто</h3>
-                        <p>Мойка, полировка, проверка состояния</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 10 -->
-                <div class="process-step">
-                    <div class="step-icon">🎉</div>
-                    <div class="step-content">
-                        <h3>10. Выдача клиенту</h3>
-                        <p>Передаем вам ключи от нового автомобиля</p>
-                    </div>
-                </div>
-
-                <!-- Шаг 11 -->
-                <div class="process-step">
-                    <div class="step-icon">💼</div>
-                    <div class="step-content">
-                        <h3>11. Оплата услуг</h3>
-                        <p>Вы оплачиваете наши услуги по доставке</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
@@ -318,6 +167,40 @@
             // ==========================================
             const urlParams = new URLSearchParams(window.location.search);
             const refSlug = urlParams.get('ref'); // Используем эту переменную и в промокоде, и в аналитике
+            const consultationPromocode = document.getElementById('consultationPromocode');
+            if (consultationPromocode) {
+                consultationPromocode.value = refSlug ? refSlug.trim() : 'ECARSBURG';
+            }
+
+            const consultationForm = document.getElementById('consultationForm');
+            if (consultationForm) {
+                consultationForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const submitButton = consultationForm.querySelector('button[type="submit"]');
+                    const message = document.getElementById('consultationMessage');
+                    const formData = new FormData(consultationForm);
+                    const payload = Object.fromEntries(formData.entries());
+                    payload.promocode = consultationPromocode ? consultationPromocode.value : 'ECARSBURG';
+                    if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Отправляем...'; }
+                    if (message) { message.textContent = ''; message.className = 'consultation-message'; }
+                    try {
+                        const response = await fetch('/create-consultation-lead', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const result = await response.json();
+                        if (!response.ok || !result.ok) throw new Error(result.message || 'Не удалось отправить заявку.');
+                        consultationForm.reset();
+                        if (consultationPromocode) consultationPromocode.value = refSlug ? refSlug.trim() : 'ECARSBURG';
+                        if (message) { message.textContent = result.message; message.classList.add('is-success'); }
+                    } catch (error) {
+                        if (message) { message.textContent = error.message || 'Не удалось отправить заявку. Попробуйте позже.'; message.classList.add('is-error'); }
+                    } finally {
+                        if (submitButton) { submitButton.disabled = false; submitButton.textContent = 'Получить консультацию'; }
+                    }
+                });
+            }
 
             const promoDisplay = document.getElementById('promoCodeDisplay');
             const promoHint = document.getElementById('promoHint');
@@ -388,6 +271,14 @@
             const track = document.getElementById('carouselTrack');
             if (track) {
                 const slides = Array.from(track.children);
+                if (slides.length === 0) {
+                    const prev = document.getElementById('prevBtn');
+                    const next = document.getElementById('nextBtn');
+                    const dots = document.getElementById('carouselDots');
+                    if (prev) prev.hidden = true;
+                    if (next) next.hidden = true;
+                    if (dots) dots.hidden = true;
+                } else {
                 const prevBtn = document.getElementById('prevBtn');
                 const nextBtn = document.getElementById('nextBtn');
                 const dotsContainer = document.getElementById('carouselDots');
@@ -454,6 +345,7 @@
                 window.addEventListener('resize', updateCarousel);
                 startAutoplay();
                 updateCarousel();
+                }
             }
 
             // ==========================================

@@ -5,3 +5,5 @@ alembic
 qrcode
 Pillow
 Werkzeug
+requests
+python-dotenv

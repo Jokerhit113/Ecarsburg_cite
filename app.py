@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from database import engine, Base, SessionLocal
 from models import Company, UserAction, ClickEvent, Bonus, SiteSetting, ROLE_ADMIN, ROLE_SUPERVISOR, ROLE_PARTNER
@@ -13,6 +13,13 @@ from datetime import datetime, timedelta
 from sqlalchemy import func
 import random
 import string
+import re
+import json
+import uuid
+from create_lead_bitrix import create_lead, BitrixLeadError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Создаем таблицы в базе данных (если их еще нет)
 Base.metadata.create_all(bind=engine)
@@ -94,6 +101,34 @@ def ensure_upload_dirs():
     os.makedirs(app.config['UPLOAD_IMG_FOLDER'], exist_ok=True)
 
 
+def get_gallery_images(db):
+    """Возвращает упорядоченный список имён изображений для карусели."""
+    stored = get_setting(db, 'gallery_images', None)
+    if stored is not None:
+        try:
+            names = json.loads(stored)
+        except (TypeError, ValueError):
+            names = []
+        return [
+            name for name in names
+            if isinstance(name, str) and name == os.path.basename(name)
+            and allowed_file(name, ALLOWED_IMAGE_EXTENSIONS)
+            and os.path.isfile(os.path.join(app.config['UPLOAD_IMG_FOLDER'], name))
+        ]
+
+    # Совместимость с текущими фотографиями photo1.jpg, photo2.jpg и т.д.
+    names = [
+        name for name in os.listdir(app.config['UPLOAD_IMG_FOLDER'])
+        if re.fullmatch(r'photo\d+\.(?:jpg|jpeg|png|webp)', name, re.IGNORECASE)
+        and os.path.isfile(os.path.join(app.config['UPLOAD_IMG_FOLDER'], name))
+    ]
+    return sorted(names, key=lambda name: int(re.search(r'photo(\d+)', name, re.IGNORECASE).group(1)))
+
+def save_gallery_images(db, names):
+    """Сохраняет список имён файлов карусели в настройках сайта."""
+    set_setting(db, 'gallery_images', json.dumps(names, ensure_ascii=False))
+
+
 # Настройка Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -127,15 +162,46 @@ def index():
         video_path = get_setting(db, 'welcome_video', DEFAULT_VIDEO_PATH)
         poster_path = get_setting(db, 'welcome_poster', DEFAULT_POSTER_PATH)
         texts = get_site_texts(db)
+        gallery_images = get_gallery_images(db)
         return render_template(
             'index.html',
             bonuses=bonuses,
+            gallery_images=gallery_images,
             welcome_video=video_path,
             welcome_poster=poster_path,
             texts=texts
         )
     finally:
         db.close()
+
+
+@app.route('/create-consultation-lead', methods=['POST'])
+def create_consultation_lead():
+    """Принимает заявку с формы консультации и создаёт лид в Bitrix24."""
+    data = request.get_json(silent=True) if request.is_json else request.form
+    data = data or {}
+    name = ' '.join(str(data.get('name', '')).split())[:120]
+    phone = ' '.join(str(data.get('phone', '')).split())[:40]
+    promocode = ' '.join(str(data.get('promocode', '')).split())[:100] or 'ECARSBURG'
+    consent = str(data.get('consent', '')).lower() in ('1', 'true', 'on', 'yes')
+
+    if len(name) < 2:
+        return jsonify(ok=False, message='Укажите ваше имя.'), 400
+    if len(phone) < 6 or not re.search(r'\d', phone):
+        return jsonify(ok=False, message='Укажите корректный номер телефона.'), 400
+    if not consent:
+        return jsonify(ok=False, message='Необходимо согласие на обработку персональных данных.'), 400
+
+    try:
+        result = create_lead(name=name, telephone_number=phone, promocode=promocode)
+        app.logger.info('Bitrix24 lead created, id=%s', result.get('id'))
+        return jsonify(ok=True, message='Спасибо! Заявка отправлена. Мы скоро свяжемся с вами.'), 200
+    except BitrixLeadError as exc:
+        app.logger.warning('Bitrix24 lead creation failed: %s', exc)
+        return jsonify(ok=False, message='Не удалось отправить заявку. Попробуйте позже или свяжитесь с нами другим способом.'), 502
+    except Exception:
+        app.logger.exception('Unexpected error while creating Bitrix24 lead')
+        return jsonify(ok=False, message='Произошла ошибка. Попробуйте позже.'), 500
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -801,6 +867,70 @@ def admin_media():
 
 
 # ==================== СУПЕРВАЙЗЕРЫ (только главный админ) ====================
+
+@app.route('/admin/gallery', methods=['GET', 'POST'])
+@admin_required
+def admin_gallery():
+    """Главный администратор управляет фотографиями карусели на главной."""
+    ensure_upload_dirs()
+    db = SessionLocal()
+    try:
+        images = get_gallery_images(db)
+
+        if request.method == 'POST':
+            action = request.form.get('action', 'upload')
+
+            if action == 'delete':
+                filename = request.form.get('filename', '')
+                # Удаляем только файл, который действительно присутствует в карусели.
+                if filename not in images or filename != os.path.basename(filename):
+                    flash('Фотография не найдена в карусели.', 'error')
+                    return redirect(url_for('admin_gallery'))
+                path = os.path.join(app.config['UPLOAD_IMG_FOLDER'], filename)
+                try:
+                    if os.path.isfile(path):
+                        os.remove(path)
+                    images.remove(filename)
+                    save_gallery_images(db, images)
+                    flash('Фотография удалена из карусели.', 'success')
+                except OSError:
+                    app.logger.exception('Could not delete gallery image %s', filename)
+                    flash('Не удалось удалить файл фотографии.', 'error')
+                return redirect(url_for('admin_gallery'))
+
+            uploaded = request.files.getlist('images')
+            valid_uploads = [file for file in uploaded if file and file.filename]
+            if not valid_uploads:
+                flash('Выберите одну или несколько фотографий для загрузки.', 'error')
+                return redirect(url_for('admin_gallery'))
+
+            saved = []
+            for image_file in valid_uploads:
+                if not allowed_file(image_file.filename, ALLOWED_IMAGE_EXTENSIONS):
+                    flash(f'Недопустимый формат файла: {image_file.filename}. Используйте JPG, JPEG, PNG или WEBP.', 'error')
+                    continue
+                ext = image_file.filename.rsplit('.', 1)[1].lower()
+                filename = f'gallery_{uuid.uuid4().hex}.{ext}'
+                destination = os.path.join(app.config['UPLOAD_IMG_FOLDER'], filename)
+                try:
+                    image_file.save(destination)
+                    saved.append(filename)
+                except OSError:
+                    app.logger.exception('Could not save gallery image')
+                    flash('Не удалось сохранить одну из фотографий.', 'error')
+
+            if saved:
+                images.extend(saved)
+                save_gallery_images(db, images)
+                flash(f'Загружено фотографий: {len(saved)}.', 'success')
+            elif valid_uploads:
+                flash('Фотографии не были загружены. Проверьте формат файлов.', 'error')
+            return redirect(url_for('admin_gallery'))
+
+        return render_template('admin_gallery.html', images=images)
+    finally:
+        db.close()
+
 
 @app.route('/admin/supervisors')
 @admin_required

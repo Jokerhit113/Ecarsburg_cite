@@ -2028,3 +2028,267 @@ body:not(.admin-theme) .container {
         margin-left: 3px;
     }
 }
+
+
+/* === Форма консультации === */
+.consultation-section {
+    width: min(100% - 32px, 760px);
+    margin: 48px auto;
+    padding: clamp(24px, 5vw, 48px);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 12px 36px rgba(26, 32, 44, 0.08);
+}
+.consultation-section h2 { text-align: center; margin-bottom: 10px; }
+.consultation-form { display: flex; flex-direction: column; gap: 10px; max-width: 520px; margin: 28px auto 0; }
+.consultation-form > label:not(.consent-label) { font-weight: 600; margin-top: 5px; }
+.consultation-form > input[type="text"],
+.consultation-form > input[type="tel"] {
+    width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid #d7dce3;
+    border-radius: 10px; font: inherit; background: #fff; color: #222;
+}
+.consultation-form > input:focus { outline: 2px solid #3182ce; outline-offset: 1px; }
+.consent-label { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; font-size: .92rem; line-height: 1.5; }
+.consent-label input { margin-top: 5px; flex: 0 0 auto; }
+.consent-label a { color: #2b6cb0; text-decoration: underline; }
+.consultation-submit { min-height: 50px; border: 0; border-radius: 10px; padding: 12px 20px; background: #1a202c; color: #fff; font: inherit; font-weight: 700; cursor: pointer; transition: opacity .2s ease; }
+.consultation-submit:hover { opacity: .88; }
+.consultation-submit:disabled { opacity: .65; cursor: wait; }
+.consultation-message { min-height: 1.4em; margin-top: 4px; font-size: .95rem; }
+.consultation-message.is-success { color: #218838; }
+.consultation-message.is-error { color: #b42318; }
+
+
+/* Юридическая подпись под ссылками на социальные сети */
+.instagram-disclaimer {
+    color: #ffffff !important;
+    font-size: 0.85em;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+/* Управление галереей в панели главного администратора */
+.gallery-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+.gallery-admin-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+.gallery-admin-card img {
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 9px;
+    background: #f1f5f9;
+}
+.gallery-admin-card form { margin-top: 10px; }
+.gallery-admin-card .btn-danger { background: #b91c1c; color: #fff; border: 0; }
+.gallery-upload-hint { color: #64748b; font-size: 0.9em; }
+
+
+/* ===== Адаптивность главной страницы: исправление переполнения на телефонах ===== */
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+}
+
+@media (max-width: 768px) {
+    .top-nav {
+        width: 100%;
+        min-width: 0;
+        padding: 12px 16px;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .nav-brand {
+        min-width: 0;
+        font-size: 1.15rem;
+        line-height: 1.25;
+        white-space: nowrap;
+    }
+
+    .nav-links {
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+    }
+
+    .nav-link {
+        min-width: 0;
+        padding: 4px 0;
+        font-size: 0.82rem;
+        white-space: normal;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 18px auto;
+        padding-left: 12px;
+        padding-right: 12px;
+        gap: 20px;
+    }
+
+    .main-content > section {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 28px 16px;
+        border-radius: 18px;
+    }
+
+    .main-content section h2 {
+        max-width: 100%;
+        font-size: clamp(1.35rem, 5.2vw, 1.7rem);
+        line-height: 1.25;
+        letter-spacing: -0.35px;
+        overflow-wrap: anywhere;
+    }
+
+    .main-content .section-subtitle,
+    .main-content p {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: normal;
+    }
+
+    .video-container,
+    .video-section video,
+    #welcomeVideo {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        height: auto;
+    }
+
+    .video-container {
+        overflow: hidden;
+        border-radius: 14px;
+    }
+
+    .promo-gifts {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gift-card,
+    .promo-code-container,
+    .promo-code-box,
+    .consultation-section,
+    .consultation-form,
+    .links-section,
+    .gallery-section {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .consultation-section {
+        margin: 28px auto 0;
+        padding: 22px 16px;
+    }
+
+    .consultation-form input,
+    .consultation-form button {
+        max-width: 100%;
+    }
+
+    .link-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .social-btn {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .carousel-container,
+    .carousel-wrapper,
+    .carousel-track,
+    .carousel-slide {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .carousel-slide {
+        flex: 0 0 100%;
+    }
+
+    footer {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 22px 14px;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        align-items: center;
+        padding: 11px 12px;
+        column-gap: 8px;
+    }
+
+    .nav-brand {
+        font-size: 1.05rem;
+    }
+
+    .nav-links {
+        gap: 4px 10px;
+    }
+
+    .nav-link {
+        font-size: 0.75rem;
+    }
+
+    .main-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .main-content > section {
+        padding: 24px 13px;
+    }
+
+    .main-content section h2 {
+        font-size: clamp(1.25rem, 5vw, 1.5rem);
+    }
+
+    .section-subtitle {
+        margin-bottom: 22px;
+    }
+
+    .video-play-btn {
+        width: 60px;
+        height: 60px;
+    }
+}

@@ -1,0 +1,47 @@
+{% extends "admin_base.html" %}
+{% set active_nav = "gallery" %}
+{% block title %}Фотографии карусели{% endblock %}
+{% block content %}
+    <h1>🖼 Фотографии на главной</h1>
+    <p>Загружайте новые фотографии в карусель или удаляйте ненужные. Изменения сразу отображаются на главной странице.</p>
+
+    <section class="admin-section" style="margin-top: 22px;">
+        <h2>Загрузить фотографии</h2>
+        <form method="POST" enctype="multipart/form-data" class="media-upload-form">
+            <input type="hidden" name="action" value="upload">
+            <div class="form-group">
+                <label for="images">Фотографии (JPG, JPEG, PNG, WEBP)</label>
+                <input type="file" id="images" name="images" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple required>
+                <small class="gallery-upload-hint">Можно выбрать несколько файлов за один раз. Новые фотографии добавятся в конец карусели.</small>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:auto;">⬆️ Загрузить фотографии</button>
+        </form>
+    </section>
+
+    <section class="admin-section" style="margin-top: 22px;">
+        <h2>Фотографии в карусели ({{ images|length }})</h2>
+        {% if images %}
+        <div class="gallery-admin-grid">
+            {% for image in images %}
+            <article class="gallery-admin-card">
+                <img src="{{ url_for('static', filename='img/' ~ image) }}" alt="Фото {{ loop.index }}">
+                <p><strong>Фото {{ loop.index }}</strong></p>
+                <form method="POST" onsubmit="return confirm('Удалить эту фотографию из карусели?');">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="filename" value="{{ image }}">
+                    <button type="submit" class="btn btn-small btn-danger">🗑 Удалить</button>
+                </form>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-data">В карусели пока нет фотографий. Загрузите изображения выше.</p>
+        {% endif %}
+    </section>
+{% endblock %}
+{% block footer_actions %}
+    <div class="actions" style="margin-top:30px;">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn">⚙️ Админ-панель</a>
+        <a href="{{ url_for('index') }}" class="btn" target="_blank">👁 Смотреть на сайте</a>
+    </div>
+{% endblock %}
