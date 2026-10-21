@@ -41,7 +41,7 @@ migrate_roles_schema()
 
 # Инициализация Flask
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-super-secret-key-change-in-production'  # Замени на случайную строку!
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') or 'your-super-secret-key-change-in-production'  # Замени на случайную строку!
 app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200 MB max upload
 app.config['UPLOAD_VIDEO_FOLDER'] = os.path.join(app.root_path, 'static', 'video')
 app.config['UPLOAD_IMG_FOLDER'] = os.path.join(app.root_path, 'static', 'img')
@@ -1083,4 +1083,4 @@ def admin_texts():
 # ==================== ЗАПУСК ====================
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_DEBUG') == '1')

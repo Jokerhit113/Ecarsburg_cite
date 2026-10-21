@@ -74,8 +74,9 @@
                     <p class="section-subtitle" style="opacity:0.7;">Подарки скоро появятся</p>
                 {% endif %}
             </div>
+            <br>
             <!-- Форма получения консультации -->
-            <section class="consultation-section" id="consultation">
+            <section class="contact-section">
                 <h2>Получить консультацию</h2>
                 <p class="section-subtitle">Оставьте свои контакты — мы свяжемся с вами и ответим на вопросы</p>
                 <form id="consultationForm" class="consultation-form">
@@ -119,7 +120,7 @@
                     <span>MAX</span>
                 </a>
 
-                <a href="https://vk.com/E_CarsBurg" target="_blank" class="social-btn btn-vk">
+                <a href="https://vk.com/ecarsburg" target="_blank" class="social-btn btn-vk">
                     <svg id="Icon/Social/VK" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none"><path fill="#07F" d="M0 0h32v32H0z"/><path fill="#fff" d="M16.8 21.615c-6.15 0-9.656-4.208-9.8-11.22h3.093c.099 5.142 2.364 7.318 4.163 7.767v-7.768h2.904v4.433c1.771-.19 3.641-2.212 4.27-4.442h2.896a8.57 8.57 0 0 1-3.938 5.602A8.87 8.87 0 0 1 25 21.615h-3.192c-.683-2.131-2.391-3.785-4.648-4.01v4.01h-.36"/></svg>
                     <span>ВКонтакте</span>
                 </a>
@@ -155,10 +156,71 @@
                 <div class="carousel-dots" id="carouselDots"></div>
             </div>
         </section>
+
+        <!-- Как нас найти -->
+        <section class="location-section" id="location">
+            <div class="location-head">
+                <span class="location-head-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                </span>
+                <h2>Как нас <span class="location-accent">найти</span></h2>
+                <p class="section-subtitle">Будем рады видеть вас в нашем офисе!</p>
+            </div>
+
+            <div class="location-card">
+                <div class="location-info">
+                    <div class="location-logo">E<span class="location-logo-dash"></span>CarsBurg</div>
+                    <br>
+                    <div class="location-item">
+                        <span class="location-item-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                        </span>
+                        <div class="location-item-text">
+                            <strong>Наш адрес</strong>
+                            <span>г. Екатеринбург, ул. Металлургов, 69, 2 этаж</span>
+                        </div>
+                    </div>
+
+                    <div class="location-item">
+                        <span class="location-item-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        </span>
+                        <div class="location-item-text">
+                            <strong>Режим работы</strong>
+                            <span>Ежедневно с 09:30 до 20:00</span>
+                            <small>Без выходных</small>
+                        </div>
+                    </div>
+
+                    <a class="location-route-btn" href="https://yandex.ru/maps/?rtext=~%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9C%D0%B5%D1%82%D0%B0%D0%BB%D0%BB%D1%83%D1%80%D0%B3%D0%BE%D0%B2%2C%2069&rtt=auto" target="_blank" rel="noopener noreferrer">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M21.5 2.5 2.8 10.2c-.9.4-.8 1.6.1 1.9l5.3 1.7 2 6.1c.3.9 1.5 1 1.9.2l2.3-4.2 4.6 3.4c.7.5 1.7.1 1.9-.8l2.3-15.1c.1-.9-.8-1.5-1.7-1.1zM9.4 13.2l8.1-5.9-6.2 7.3-.4 2.9-1.5-4.3z"/></svg>
+                        <span>Построить маршрут</span>
+                        <svg class="location-route-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                    </a>
+
+                    <div class="location-note">
+                        <span class="location-item-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M6 17l1.3-5.2A2 2 0 0 1 9.2 10h5.6a2 2 0 0 1 1.9 1.8L18 17M5 17v2M19 17v2"/><circle cx="8.5" cy="14" r=".6"/><circle cx="15.5" cy="14" r=".6"/></svg>
+                        </span>
+                        <span>Удобное расположение<br>и комфортная парковка</span>
+                    </div>
+                </div>
+
+                <div class="location-map">
+                    <iframe
+                        src="https://yandex.ru/map-widget/v1/?text=%D0%95%D0%BA%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%BD%D0%B1%D1%83%D1%80%D0%B3%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%9C%D0%B5%D1%82%D0%B0%D0%BB%D0%BB%D1%83%D1%80%D0%B3%D0%BE%D0%B2%2C%2069&z=16"
+                        title="Карта: г. Екатеринбург, ул. Металлургов, 69"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
         <p>{{ texts.footer_text }}</p>
+        <a href="https://e-carsburg.ru/policy/">Политика конфиденциальности</a>
     </footer>
         <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -184,7 +246,7 @@
                     if (submitButton) { submitButton.disabled = true; submitButton.textContent = 'Отправляем...'; }
                     if (message) { message.textContent = ''; message.className = 'consultation-message'; }
                     try {
-                        const response = await fetch('/create-consultation-lead', {
+                        const response = await fetch("{{ url_for('create_consultation_lead') }}", {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
@@ -371,7 +433,7 @@
             // 4. Отслеживание действий (Analytics)
             // ==========================================
             function trackEvent(actionType, actionDetail) {
-                fetch('/track-action', {
+                fetch("{{ url_for('track_action') }}", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

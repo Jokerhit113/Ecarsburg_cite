@@ -2292,3 +2292,214 @@ body {
         height: 60px;
     }
 }
+
+/* =========================================================
+   БЛОК «КАК НАС НАЙТИ»
+   ========================================================= */
+.location-section {
+    background: linear-gradient(160deg, #0b1220 0%, #0f1a30 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.18);
+    color: #e5eefb;
+    padding: 50px 40px 40px;
+}
+
+.location-head-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    margin-bottom: 12px;
+}
+
+.location-eyebrow {
+    display: block;
+    font-size: 0.85em;
+    letter-spacing: 0.3em;
+    color: #60a5fa;
+    margin-bottom: 8px;
+}
+
+.location-section h2 { color: #fff; }
+.location-accent { color: #2f7bff; }
+
+.location-card {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+    gap: 32px;
+    padding: 24px;
+    margin-top: 10px;
+    text-align: left;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    border-radius: 20px;
+}
+
+.location-logo {
+    display: flex;
+    align-items: center;
+    font-size: 2.2em;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.location-logo-dash {
+    display: inline-block;
+    width: 10px;
+    height: 4px;
+    margin: 0 2px;
+    border-radius: 2px;
+    background: #2f7bff;
+}
+
+.location-tagline {
+    font-size: 0.72em;
+    letter-spacing: 0.2em;
+    color: #60a5fa;
+    margin: 6px 0 26px;
+}
+
+.location-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+
+.location-item-icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: #16213a;
+    color: #e5eefb;
+}
+
+.location-item-text { display: flex; flex-direction: column; gap: 2px; }
+.location-item-text strong { color: #fff; font-size: 1.02em; }
+.location-item-text span { color: #dbe7fb; line-height: 1.5; }
+.location-item-text small { color: #94a3b8; font-size: 0.9em; }
+
+.location-route-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 6px 0 22px;
+    padding: 16px 24px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #1d6dff, #2f7bff);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05em;
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.location-route-btn span { flex: 1; }
+.location-route-arrow { opacity: 0.8; }
+
+.location-route-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.5);
+}
+
+.location-note {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding-top: 22px;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    color: #94a3b8;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.location-note .location-item-icon { width: 46px; height: 46px; }
+
+.location-map {
+    min-height: 420px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #1e293b;
+}
+
+.location-map iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+}
+
+@media (max-width: 860px) {
+    .location-section { padding: 36px 16px 24px; }
+    .location-card { grid-template-columns: 1fr; padding: 18px; gap: 24px; }
+    .location-map, .location-map iframe { min-height: 320px; }
+    .location-logo { font-size: 1.9em; }
+}
+
+
+/* Неоновая подсветка для блока формы */
+.contact-section form,
+.contact-form {
+    border: 2px solid #00d4ff;
+    border-radius: 15px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.8);
+
+    /* Неоновый эффект */
+    box-shadow:
+        0 0 10px #00d4ff,
+        0 0 20px #00d4ff,
+        0 0 30px #00d4ff,
+        0 0 40px #0077ff,
+        0 0 70px #0077ff,
+        0 0 80px #0077ff,
+        inset 0 0 10px #00d4ff;
+
+    /* Анимация пульсации (опционально) */
+    animation: neon-pulse 2s ease-in-out infinite alternate;
+}
+
+/* Анимация пульсации неона */
+@keyframes neon-pulse {
+    from {
+        box-shadow:
+            0 0 10px #00d4ff,
+            0 0 20px #00d4ff,
+            0 0 30px #00d4ff,
+            0 0 40px #0077ff,
+            0 0 70px #0077ff,
+            inset 0 0 10px #00d4ff;
+    }
+    to {
+        box-shadow:
+            0 0 15px #00d4ff,
+            0 0 30px #00d4ff,
+            0 0 45px #00d4ff,
+            0 0 60px #0077ff,
+            0 0 90px #0077ff,
+            inset 0 0 15px #00d4ff;
+    }
+}
+
+/* Эффект при наведении (опционально) */
+.contact-section form:hover,
+.contact-form:hover {
+    box-shadow:
+        0 0 20px #00d4ff,
+        0 0 40px #00d4ff,
+        0 0 60px #00d4ff,
+        0 0 80px #0077ff,
+        0 0 100px #0077ff,
+        inset 0 0 20px #00d4ff;
+}

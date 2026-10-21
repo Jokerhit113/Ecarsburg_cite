@@ -3,7 +3,8 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
 # Конфигурация БД (для старта используем SQLite, позже можно переключить на PostgreSQL)
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ecarsburg.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "ecarsburg.db"))
 
 # Создаем движок
 engine = create_engine(

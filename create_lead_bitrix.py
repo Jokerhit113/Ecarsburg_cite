@@ -28,7 +28,7 @@ def create_lead(name: str, telephone_number: str, promocode: str) -> dict:
         "fields": {
             "TITLE": f"{clean_name} С Сайта Визитки",
             "NAME": clean_name,
-            "LAST_NAME": f"От {clean_promo}",
+            "COMPANY_TITLE": clean_promo,
             "COMMENTS": f"Покупатель пришел от компании {clean_promo}",
             "EMAIL": [{"VALUE": "test@mail.ru", "VALUE_TYPE": "WORK"}],
             "PHONE": [{"VALUE": clean_phone, "VALUE_TYPE": "WORK"}],
